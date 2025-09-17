@@ -1,0 +1,75 @@
+services:
+  # DevContainer
+  dev-container:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        BASE_IMAGE: alpine:3.22
+        USER_UID: ${UID:-1000}
+        USER_GID: ${GID:-1000}
+    init: true
+    privileged: false
+    cap_drop:
+      - ALL
+    security_opt:
+      - label=disable
+    volumes:
+      - .:/code
+      - ./.devcontainer/wheels:/tmp/wheels:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${SSH_AUTH_SOCK}:/ssh-agent
+      - ${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent:/gnupg/S.gpg-agent
+      - ${HOME}/.gitconfig:/home/appuser/.gitconfig:ro
+    working_dir: /code
+    command: ["sleep", "infinity"]
+    restart: unless-stopped
+    environment:
+      - DOCKER_BUILDKIT=1
+      - BUILDKIT_PROGRESS=plain
+      - SSH_AUTH_SOCK=/ssh-agent
+      - GPG_AGENT_INFO=/gnupg/S.gpg-agent:0:1
+    user: appuser
+    networks:
+      - build-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Application image consumer
+  app-container:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/code
+    working_dir: /code
+    environment:
+      - DOCKER_BUILDKIT=1
+      - POETRY_VIRTUALENVS_CREATE=false
+      - BUILDKIT_PROGRESS=plain
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-test}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-test}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-west-2}
+      - AWS_ENDPOINT_URL=http://host.docker.internal:${CONFIG_TEST_ENV_LOCALSTACK_PORT:-4566}
+      - OC_DATA_PIPELINE_CONFIG_S3_BUCKET=${OC_DATA_PIPELINE_CONFIG_S3_BUCKET:-oc-local-data-config}
+      - OC_DATA_PIPELINE_STORAGE_S3_URL=${OC_DATA_PIPELINE_STORAGE_S3_URL:-s3://oc-local-data-pipeline}
+      - OC_DATA_PIPELINE_STAGE=${OC_DATA_PIPELINE_STAGE:-parsed}
+      - OC_DATA_PIPELINE_STEP=${OC_DATA_PIPELINE_STEP:-parse}
+      - OC_DATA_PIPELINE_DATA_REGISTRY_ID=${OC_DATA_PIPELINE_DATA_REGISTRY_ID:-us_fl}
+      - OC_DATA_PIPELINE_ORCHESTRATION_SQS_URL=http://host.docker.internal:${CONFIG_TEST_ENV_LOCALSTACK_PORT:-4566}/000000000000/data-pipeline-orchestration-queue
+      - OC_KVSTORE_TYPE=${OC_KVSTORE_TYPE:-redis}
+      - OC_KV_STORE_REDIS_HOST=host.docker.internal
+      - OC_KV_STORE_REDIS_PORT=${OC_KV_STORE_REDIS_PORT:-6379}
+      - OC_LOGGING_LEVEL=DEBUG
+    networks:
+      - build-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  poetry-cache:
+
+
+networks:
+  build-network:
+    driver: bridge

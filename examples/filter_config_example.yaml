@@ -1,0 +1,275 @@
+# Example Parser Configuration with Filter Strategies
+# This demonstrates how filter strategies can be integrated into the parser configuration
+
+data_source_id: us_fl
+
+# Parser settings
+concurrency: 10
+
+# Resource parsers with filter strategies
+resource_parsers:
+  # Parse fixed-width text files with date filtering
+  "^.*\\.txt$":
+    fixed_width:
+      field_specs:
+        - name: "COR_NUMBER"
+          start: 1
+          length: 12
+        - name: "COR_NAME"
+          start: 13
+          length: 120
+        - name: "COR_STATUS"
+          start: 133
+          length: 6
+        - name: "COR_FILING_TYPE"
+          start: 139
+          length: 6
+        - name: "COR_FILE_DATE"
+          start: 145
+          length: 8
+        - name: "COR_PRINC_ADD_1"
+          start: 153
+          length: 50
+        - name: "COR_PRINC_ADD_2"
+          start: 203
+          length: 50
+        - name: "COR_PRINC_CITY"
+          start: 253
+          length: 30
+        - name: "COR_PRINC_ZIP"
+          start: 283
+          length: 10
+        - name: "COR_MAIL_ADD_1"
+          start: 293
+          length: 50
+        - name: "COR_MAIL_ADD_2"
+          start: 343
+          length: 50
+        - name: "COR_MAIL_CITY"
+          start: 393
+          length: 30
+        - name: "COR_MAIL_STATE"
+          start: 423
+          length: 2
+        - name: "COR_MAIL_ZIP"
+          start: 425
+          length: 10
+        - name: "COR_MAIL_COUNTRY"
+          start: 435
+          length: 2
+        - name: "RA_NAME"
+          start: 437
+          length: 50
+        - name: "RA_NAME_TYPE"
+          start: 487
+          length: 1
+        - name: "RA_ADD_1"
+          start: 488
+          length: 50
+        - name: "RA_CITY"
+          start: 538
+          length: 30
+        - name: "RA_STATE"
+          start: 568
+          length: 2
+        - name: "RA_ZIP5"
+          start: 570
+          length: 5
+        - name: "PRINC1_TITLE"
+          start: 575
+          length: 4
+        - name: "PRINC1_NAME_TYPE"
+          start: 579
+          length: 1
+        - name: "PRINC1_NAME"
+          start: 580
+          length: 46
+        - name: "PRINC1_ADD_1"
+          start: 626
+          length: 50
+        - name: "PRINC1_CITY"
+          start: 676
+          length: 30
+        - name: "PRINC1_STATE"
+          start: 706
+          length: 2
+        - name: "PRINC1_ZIP5"
+          start: 708
+          length: 5
+        - name: "PRINC2_TITLE"
+          start: 713
+          length: 4
+        - name: "PRINC2_NAME_TYPE"
+          start: 717
+          length: 1
+        - name: "PRINC2_NAME"
+          start: 718
+          length: 46
+        - name: "PRINC2_ADD_1"
+          start: 764
+          length: 50
+        - name: "PRINC2_CITY"
+          start: 814
+          length: 30
+        - name: "PRINC2_STATE"
+          start: 844
+          length: 2
+        - name: "PRINC2_ZIP5"
+          start: 846
+          length: 5
+        - name: "PRINC3_TITLE"
+          start: 851
+          length: 4
+        - name: "PRINC3_NAME_TYPE"
+          start: 855
+          length: 1
+        - name: "PRINC3_NAME"
+          start: 856
+          length: 46
+        - name: "PRINC3_ADD_1"
+          start: 902
+          length: 50
+        - name: "PRINC3_CITY"
+          start: 952
+          length: 30
+        - name: "PRINC3_STATE"
+          start: 982
+          length: 2
+        - name: "PRINC3_ZIP5"
+          start: 984
+          length: 5
+        - name: "PRINC4_TITLE"
+          start: 989
+          length: 4
+        - name: "PRINC4_NAME_TYPE"
+          start: 993
+          length: 1
+        - name: "PRINC4_NAME"
+          start: 994
+          length: 46
+        - name: "PRINC4_ADD_1"
+          start: 1040
+          length: 50
+        - name: "PRINC4_CITY"
+          start: 1090
+          length: 30
+        - name: "PRINC4_STATE"
+          start: 1120
+          length: 2
+        - name: "PRINC4_ZIP5"
+          start: 1122
+          length: 5
+        - name: "PRINC5_TITLE"
+          start: 1127
+          length: 4
+        - name: "PRINC5_NAME_TYPE"
+          start: 1131
+          length: 1
+        - name: "PRINC5_NAME"
+          start: 1132
+          length: 46
+        - name: "PRINC5_ADD_1"
+          start: 1178
+          length: 50
+        - name: "PRINC5_CITY"
+          start: 1228
+          length: 30
+        - name: "PRINC5_STATE"
+          start: 1258
+          length: 2
+        - name: "PRINC5_ZIP5"
+          start: 1260
+          length: 5
+        - name: "PRINC6_TITLE"
+          start: 1265
+          length: 4
+        - name: "PRINC6_NAME_TYPE"
+          start: 1269
+          length: 1
+        - name: "PRINC6_NAME"
+          start: 1270
+          length: 46
+        - name: "PRINC6_ADD_1"
+          start: 1316
+          length: 50
+        - name: "PRINC6_CITY"
+          start: 1366
+          length: 30
+        - name: "PRINC6_STATE"
+          start: 1396
+          length: 2
+        - name: "PRINC6_ZIP5"
+          start: 1398
+          length: 5
+        - name: "STATE_COUNTRY"
+          start: 1403
+          length: 2
+        - name: "RetrievedAt"
+          start: 1405
+          length: 10
+      ocid_generator:
+        jurisdiction_code: "us_fl"
+        company_number_field: "COR_NUMBER"
+      schema_version: "1.0"
+      on_error: "skip"
+      # Filter strategies for this parser
+      filters:
+        # Date filter to only process records from August 2025
+        - date_filter:
+            date_field: "COR_FILE_DATE"
+            start_date: "20250801"
+            end_date: "20250831"
+            date_pattern: "YYYYMMDD"
+            comparison_operator: "between"
+        # Field value filter to exclude certain statuses
+        - field_value_filter:
+            field_name: "COR_STATUS"
+            exclude_values: ["Draft", "Pending", "Cancelled"]
+        # Composite filter combining multiple criteria
+        - composite_filter:
+            operator: "AND"
+            filters:
+              - field_value_filter:
+                  field_name: "COR_FILING_TYPE"
+                  filter_values: ["Corporation", "LLC", "Partnership"]
+              - field_value_filter:
+                  field_name: "COR_NUMBER"
+                  pattern: "^[0-9]{8,12}$"  # Company numbers should be 8-12 digits
+  
+  # Parse CSV files with different filtering
+  "^.*\\.csv$":
+    csv:
+      delimiter: ","
+      quotechar: '"'
+      has_header: true
+      trim_whitespace: true
+      null_values: ["", "NULL", "null"]
+      ocid_generator:
+        jurisdiction_code: "us_fl"
+        company_number_field: "ENTITY_NUM"
+      schema_version: "1.0"
+      on_error: "skip"
+      # Different filters for CSV files
+      filters:
+        # Only process records after a certain date
+        - date_filter:
+            date_field: "Filing_Date"
+            start_date: "2025-01-01"
+            date_pattern: "YYYY-MM-DD"
+            comparison_operator: "after"
+        # Include only specific filing types
+        - field_value_filter:
+            field_name: "Filing_Type"
+            filter_values: ["Annual Report", "Change of Agent", "Certificate of Incorporation"]
+
+# Global filters that apply to all parsers
+global_filters:
+  # Exclude test or dummy records
+  - field_value_filter:
+      field_name: "COR_NAME"
+      exclude_values: ["TEST", "DUMMY", "SAMPLE"]
+      case_sensitive: false
+  # Only process records with valid company numbers
+  - field_value_filter:
+      field_name: "COR_NUMBER"
+      pattern: "^[0-9A-Z]{6,15}$"  # Valid company number pattern
