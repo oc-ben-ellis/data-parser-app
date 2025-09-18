@@ -21,7 +21,7 @@ class TestHealthFunctional:
         """Start a health check server process for testing."""
         # Create a simple test script that starts the health server
         test_script = Path(temp_dir) / "test_health_server.py"
-        test_script.write_text('''
+        test_script.write_text("""
 import sys
 import os
 from pathlib import Path
@@ -35,8 +35,8 @@ from data_parser_app.main import health_command
 if __name__ == "__main__":
     # Start health server on port 8081 to avoid conflicts
     health_command(["--port", "8081", "--host", "127.0.0.1"])
-''')
-        
+""")
+
         # Start the health server process
         process = subprocess.Popen(
             [sys.executable, str(test_script)],
@@ -44,12 +44,12 @@ if __name__ == "__main__":
             stderr=subprocess.PIPE,
             cwd=temp_dir,
         )
-        
+
         # Wait a moment for the server to start
         time.sleep(2)
-        
+
         yield process
-        
+
         # Clean up
         process.terminate()
         try:
@@ -62,7 +62,7 @@ if __name__ == "__main__":
         try:
             response = requests.get("http://127.0.0.1:8081/health", timeout=5)
             assert response.status_code == 200
-            
+
             data = response.json()
             assert "status" in data
             assert data["status"] in ["healthy", "unhealthy"]
@@ -74,7 +74,7 @@ if __name__ == "__main__":
         try:
             response = requests.get("http://127.0.0.1:8081/status", timeout=5)
             assert response.status_code == 200
-            
+
             data = response.json()
             assert "app_name" in data
             assert "status" in data
@@ -90,7 +90,7 @@ if __name__ == "__main__":
         try:
             response = requests.get("http://127.0.0.1:8081/heartbeat", timeout=5)
             assert response.status_code == 200
-            
+
             # Heartbeat should return plain text
             assert response.text in ["OK", "FAIL"]
         except requests.exceptions.RequestException:
@@ -116,7 +116,7 @@ if __name__ == "__main__":
         """Test that health server can start and stop cleanly."""
         # Create a simple test script
         test_script = Path(temp_dir) / "test_health_lifecycle.py"
-        test_script.write_text('''
+        test_script.write_text("""
 import sys
 import os
 import signal
@@ -144,8 +144,8 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
-''')
-        
+""")
+
         # Start the process
         process = subprocess.Popen(
             [sys.executable, str(test_script)],
@@ -153,16 +153,16 @@ if __name__ == "__main__":
             stderr=subprocess.PIPE,
             cwd=temp_dir,
         )
-        
+
         # Wait for startup
         time.sleep(2)
-        
+
         # Verify it's running
         assert process.poll() is None
-        
+
         # Send SIGTERM to test graceful shutdown
         process.terminate()
-        
+
         # Wait for shutdown
         try:
             process.wait(timeout=10)

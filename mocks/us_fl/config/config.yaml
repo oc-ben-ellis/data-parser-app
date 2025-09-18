@@ -1,36 +1,214 @@
+# US_FL Parser Configuration
+# This configuration defines how to parse US_FL data files into JSONL format
+
 data_source_id: us_fl
 
-loader:
-  sftp_loader:
-    meta_load_name: us_fl_sftp_loader
-    sftp_config: us_fl
+# Parser settings
+concurrency: 10
 
-locators:
-  - sftp_directory:
-      sftp_config: us_fl
-      remote_dir: doc/cor
-      filename_pattern: '????????c.txt'
-      max_files: null
-      file_filter:
-        date_filter:
-          start_date: '20250829'
-          date_pattern: YYYYMMDD
-      sort_key: mtime
-      sort_reverse: true
-      state_management_prefix: us_fl_daily_provider
-  - sftp_file:
-      sftp_config: us_fl
-      file_paths:
-        - doc/Quarterly/Cor/cordata.zip
-      state_management_prefix: us_fl_quarterly_provider
-parser_settings:
-  concurrency: 1
-  target_queue_size: 100
-  rate_limit:
-    requests_per_second: 2.0
-  timeouts:
-    connect_timeout: 20.0
-    read_timeout: 300.0
-protocols:
-  sftp:
-    us_fl: sftp_config.yaml
+# Resource parsers - these define how to parse different file types
+resource_parsers:
+  # Parse fixed-width text files (like 20250829c.txt)
+  "^.*\\.txt$":
+    fixed_width:
+      field_specs:
+        - name: "COR_NUMBER"
+          start: 1
+          length: 12
+        - name: "COR_NAME"
+          start: 13
+          length: 120
+        - name: "COR_STATUS"
+          start: 204
+          length: 6
+        - name: "COR_FILING_TYPE"
+          start: 210
+          length: 6
+        - name: "COR_FILE_DATE"
+          start: 216
+          length: 8
+        - name: "COR_PRINC_ADD_1"
+          start: 220
+          length: 50
+        - name: "COR_PRINC_ADD_2"
+          start: 270
+          length: 50
+        - name: "COR_PRINC_CITY"
+          start: 304
+          length: 30
+        - name: "COR_PRINC_ZIP"
+          start: 334
+          length: 10
+        - name: "COR_MAIL_ADD_1"
+          start: 344
+          length: 50
+        - name: "COR_MAIL_ADD_2"
+          start: 394
+          length: 50
+        - name: "COR_MAIL_CITY"
+          start: 444
+          length: 30
+        - name: "COR_MAIL_STATE"
+          start: 474
+          length: 2
+        - name: "COR_MAIL_ZIP"
+          start: 476
+          length: 10
+        - name: "COR_MAIL_COUNTRY"
+          start: 486
+          length: 2
+        - name: "RA_NAME"
+          start: 488
+          length: 50
+        - name: "RA_NAME_TYPE"
+          start: 538
+          length: 1
+        - name: "RA_ADD_1"
+          start: 539
+          length: 50
+        - name: "RA_CITY"
+          start: 589
+          length: 30
+        - name: "RA_STATE"
+          start: 619
+          length: 2
+        - name: "RA_ZIP5"
+          start: 621
+          length: 5
+        - name: "PRINC1_TITLE"
+          start: 544
+          length: 4
+        - name: "PRINC1_NAME_TYPE"
+          start: 548
+          length: 1
+        - name: "PRINC1_NAME"
+          start: 549
+          length: 46
+        - name: "PRINC1_ADD_1"
+          start: 595
+          length: 50
+        - name: "PRINC1_CITY"
+          start: 645
+          length: 30
+        - name: "PRINC1_STATE"
+          start: 675
+          length: 2
+        - name: "PRINC1_ZIP5"
+          start: 677
+          length: 5
+        - name: "PRINC2_TITLE"
+          start: 682
+          length: 4
+        - name: "PRINC2_NAME_TYPE"
+          start: 686
+          length: 1
+        - name: "PRINC2_NAME"
+          start: 687
+          length: 46
+        - name: "PRINC2_ADD_1"
+          start: 733
+          length: 50
+        - name: "PRINC2_CITY"
+          start: 783
+          length: 30
+        - name: "PRINC2_STATE"
+          start: 813
+          length: 2
+        - name: "PRINC2_ZIP5"
+          start: 815
+          length: 5
+        - name: "PRINC3_TITLE"
+          start: 820
+          length: 4
+        - name: "PRINC3_NAME_TYPE"
+          start: 824
+          length: 1
+        - name: "PRINC3_NAME"
+          start: 825
+          length: 46
+        - name: "PRINC3_ADD_1"
+          start: 871
+          length: 50
+        - name: "PRINC3_CITY"
+          start: 921
+          length: 30
+        - name: "PRINC3_STATE"
+          start: 951
+          length: 2
+        - name: "PRINC3_ZIP5"
+          start: 953
+          length: 5
+        - name: "PRINC4_TITLE"
+          start: 958
+          length: 4
+        - name: "PRINC4_NAME_TYPE"
+          start: 962
+          length: 1
+        - name: "PRINC4_NAME"
+          start: 963
+          length: 46
+        - name: "PRINC4_ADD_1"
+          start: 1009
+          length: 50
+        - name: "PRINC4_CITY"
+          start: 1059
+          length: 30
+        - name: "PRINC4_STATE"
+          start: 1089
+          length: 2
+        - name: "PRINC4_ZIP5"
+          start: 1091
+          length: 5
+        - name: "PRINC5_TITLE"
+          start: 1096
+          length: 4
+        - name: "PRINC5_NAME_TYPE"
+          start: 1100
+          length: 1
+        - name: "PRINC5_NAME"
+          start: 1101
+          length: 46
+        - name: "PRINC5_ADD_1"
+          start: 1147
+          length: 50
+        - name: "PRINC5_CITY"
+          start: 1197
+          length: 30
+        - name: "PRINC5_STATE"
+          start: 1227
+          length: 2
+        - name: "PRINC5_ZIP5"
+          start: 1229
+          length: 5
+        - name: "PRINC6_TITLE"
+          start: 1234
+          length: 4
+        - name: "PRINC6_NAME_TYPE"
+          start: 1238
+          length: 1
+        - name: "PRINC6_NAME"
+          start: 1239
+          length: 46
+        - name: "PRINC6_ADD_1"
+          start: 1285
+          length: 50
+        - name: "PRINC6_CITY"
+          start: 1335
+          length: 30
+        - name: "PRINC6_STATE"
+          start: 1365
+          length: 2
+        - name: "PRINC6_ZIP5"
+          start: 1367
+          length: 5
+        - name: "STATE_COUNTRY"
+          start: 1372
+          length: 2
+        - name: "RetrievedAt"
+          start: 1374
+          length: 10
+      ocid_generator:
+        jurisdiction_code: "us_fl"
+        company_number_field: "COR_NUMBER"
+      schema_version: "1.0"
+      on_error: "skip"

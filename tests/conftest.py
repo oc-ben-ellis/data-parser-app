@@ -329,7 +329,6 @@ def temp_dir() -> Generator[str]:
         yield temp_dir
 
 
-
 def create_test_stream(content: bytes) -> AsyncGenerator[bytes]:
     """Create a test stream from bytes."""
 

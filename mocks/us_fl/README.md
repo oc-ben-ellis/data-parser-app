@@ -74,22 +74,6 @@ eval $(./bin/test-env-up.sh --env-vars-only)
   export OC_DATA_PIPELINE_ORCHESTRATION_SQS_URL=http://host.docker.internal:4566/000000000000/data-pipeline-orchestration
 ```
 
-### 1.3 Setup Mock SFTP server
-
-Run the setup script to populate the SFTP server with test data:
-
-```bash
-cd mocks/us_fl/environment
-docker-compose up -d
-./setup-mock-data.sh
-cd ../../../
-```
-
-This script creates:
-- Daily data files: `20230728_daily_data.txt`, `20230729_daily_data.txt`, `20240101_daily_data.txt`
-- Quarterly data file: `cordata.zip`
-- Proper directory structure: `/doc/cor/` and `/doc/Quarterly/Cor/`
-
 ## Step 3: Execute the Application
 
 ### 3.1 Upload Configuration to S3
@@ -99,7 +83,6 @@ First, upload the configuration files to the S3 config bucket. The application e
 ```bash
 # Upload config files to S3 config bucket
 aws --endpoint-url ${AWS_ENDPOINT_URL} s3 cp mocks/us_fl/config/config.yaml s3://oc-local-data-config/configs/us_fl/parse/config.yaml
-aws --endpoint-url ${AWS_ENDPOINT_URL} s3 cp mocks/us_fl/config/sftp_config.yaml s3://oc-local-data-config/configs/us_fl/parse/sftp_config.yaml
 
 # Verify the files were uploaded correctly
 aws --endpoint-url ${AWS_ENDPOINT_URL} s3 ls s3://oc-local-data-config/configs/us_fl/parse/ --recursive

@@ -1,7 +1,7 @@
 """Tests for core framework components.
 
 This module contains unit tests for the core framework components,
-including DataRegistryparserConfigBuilder and configuration utilities.
+including DataRegistryParserConfigBuilder and configuration utilities.
 """
 
 import pytest
@@ -9,7 +9,7 @@ from oc_pipeline_bus.identifiers import Bid as BID
 
 from data_parser_core.core import (
     BundleRef,
-    DataRegistryparserConfig,
+    DataRegistryParserConfig,
     ParsePlan,
     ParseRunContext,
 )
@@ -263,14 +263,14 @@ class TestParsePlan:
 
     def test_basic_creation(self) -> None:
         """Test basic ParsePlan creation."""
-        recipe = DataRegistryparserConfig(loader={"dummy": {}}, locators=[])
+        recipe = DataRegistryParserConfig(loader={"dummy": {}}, locators=[])
         context = ParseRunContext(run_id="test_run")
         plan = ParsePlan(config=recipe, context=context)
         assert plan.concurrency == 1
 
     def test_with_all_fields(self) -> None:
         """Test ParsePlan creation with all fields."""
-        recipe = DataRegistryparserConfig(loader={"dummy": {}}, locators=[])
+        recipe = DataRegistryParserConfig(loader={"dummy": {}}, locators=[])
         context = ParseRunContext(run_id="test_run", shared={"key": "value"})
         plan = ParsePlan(
             config=recipe,

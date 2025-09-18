@@ -12,7 +12,7 @@ import yaml
 from oc_pipeline_bus.config import DataPipelineConfig
 from oc_pipeline_bus.strategy_registry import StrategyFactoryRegistry
 
-from data_parser_core.core import DataRegistryparserConfig
+from data_parser_core.core import DataRegistryParserConfig
 from data_parser_core.strategy_registration import create_strategy_registry
 
 
@@ -63,11 +63,11 @@ api_configs:
         """Create a temporary directory with sample configuration files."""
         with tempfile.TemporaryDirectory() as temp_dir:
             config_dir = Path(temp_dir)
-            
+
             # Create the main configuration file
             config_file = config_dir / "orchestration.yaml"
             config_file.write_text(sample_config_yaml)
-            
+
             yield config_dir
 
     def test_strategy_registry_creation(self) -> None:
@@ -82,7 +82,7 @@ api_configs:
             strategy_registry=registry,
             local_config_dir=str(temp_config_dir),
         )
-        
+
         assert config.strategy_registry == registry
         assert config.local_config_dir == str(temp_config_dir)
 
@@ -93,14 +93,14 @@ api_configs:
             strategy_registry=registry,
             local_config_dir=str(temp_config_dir),
         )
-        
+
         # Load the configuration
         loaded_config = config.load_config(
-            DataRegistryparserConfig,
+            DataRegistryParserConfig,
             data_registry_id="test_source",
             step="test_step",
         )
-        
+
         assert loaded_config is not None
         assert loaded_config.config_id == "test_source"
         assert loaded_config.concurrency == 5
@@ -113,11 +113,11 @@ api_configs:
             strategy_registry=registry,
             local_config_dir=str(temp_config_dir),
         )
-        
+
         # Try to load with invalid ID
         with pytest.raises(KeyError):
             config.load_config(
-                DataRegistryparserConfig,
+                DataRegistryParserConfig,
                 data_registry_id="invalid_id",
                 step="test_step",
             )
@@ -129,11 +129,11 @@ api_configs:
             strategy_registry=registry,
             local_config_dir=str(temp_config_dir),
         )
-        
+
         # Try to load without step
         with pytest.raises(KeyError):
             config.load_config(
-                DataRegistryparserConfig,
+                DataRegistryParserConfig,
                 data_registry_id="test_source",
                 step=None,
             )
@@ -141,7 +141,7 @@ api_configs:
     def test_yaml_parsing_validation(self, sample_config_yaml: str) -> None:
         """Test that YAML configuration can be parsed and validated."""
         config_data = yaml.safe_load(sample_config_yaml)
-        
+
         # Validate required fields
         assert "config_id" in config_data
         assert "concurrency" in config_data
@@ -151,7 +151,7 @@ api_configs:
         assert "processors" in config_data
         assert "storage" in config_data
         assert "api_configs" in config_data
-        
+
         # Validate data types
         assert isinstance(config_data["config_id"], str)
         assert isinstance(config_data["concurrency"], int)
@@ -181,7 +181,7 @@ storage:
   type: file
   path: /tmp/test
 """
-        
+
         config_data = yaml.safe_load(minimal_config)
         assert config_data["config_id"] == "minimal_test"
         assert config_data["concurrency"] == 1

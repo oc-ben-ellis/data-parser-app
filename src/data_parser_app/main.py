@@ -26,7 +26,7 @@ from openc_python_common.observability import (
 
 # Recipes have been moved to YAML configuration system
 from data_parser_app.app_config import (
-    parserConfig,
+    ParserConfig,
     create_parser_app_config,
     create_health_config,
     create_run_config,
@@ -51,7 +51,7 @@ config_name = os.getenv("OC_CONFIG_ID")
 
 
 def configure_application_credential_provider(
-    _parser: parser, _app_config: parserConfig
+    _parser: parser, _app_config: ParserConfig
 ) -> None:
     """Deprecated: credential provider is injected via app_config. No-op."""
     return

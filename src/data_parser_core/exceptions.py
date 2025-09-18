@@ -48,6 +48,20 @@ class ValidationError(DataparserError):
         self.field = field
 
 
+class BundleError(DataparserError):
+    """Raised when bundle-related operations fail."""
+
+    def __init__(self, message: str, bid: str | None = None) -> None:
+        """Initialize bundle error.
+
+        Args:
+            message: Error message describing the bundle issue.
+            resource_url: Optional URL of the bundle that caused the error.
+        """
+        super().__init__(message, "RESOURCE_ERROR")
+        self.bid = bid
+
+
 class ResourceError(DataparserError):
     """Raised when resource-related operations fail."""
 
@@ -116,5 +130,3 @@ class FatalError(DataparserError):
         """
         super().__init__(message, "FATAL_ERROR")
         self.component = component
-
-

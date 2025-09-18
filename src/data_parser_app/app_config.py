@@ -10,7 +10,7 @@ from typing import TypedDict, Unpack, cast
 import environ
 from openc_python_common.envargs import args_to_config_class
 
-from data_parser_core.config import parserConfig
+from data_parser_core.config import ParserConfig
 from data_parser_core.credentials import (
     create_credential_provider,
 )
@@ -64,7 +64,7 @@ async def create_parser_app_config(
     storage_type: str | None = None,
     kv_store_type: str | None = None,
     **kwargs: Unpack[ConfigKwargs],
-) -> parserConfig:
+) -> ParserConfig:
     """Create a complete parser configuration."""
 
     def _with_prefixes(src: dict[str, object], *prefixes: str) -> dict[str, object]:
@@ -93,7 +93,7 @@ async def create_parser_app_config(
     if not storage:
         raise StorageCreationError(storage_type or "unknown")
 
-    return parserConfig(
+    return ParserConfig(
         credential_provider=credential_provider,
         kv_store=kv_store,
         storage=storage,
@@ -243,5 +243,5 @@ def create_health_config(args: list[str] | None = None) -> HealthConfig:
 
 
 # Backward compatibility aliases
-AppConfig = parserConfig
+AppConfig = ParserConfig
 create_app_config = create_parser_app_config

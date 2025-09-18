@@ -6,18 +6,9 @@ annotations instead of using generic Callable types.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, IO
+from typing import Any, IO, AsyncGenerator, BinaryIO
 
-
-class FilterStrategyBase(ABC):
-    """Abstract base class for filter strategies.
-
-    Implementations must provide a `filter` method.
-    """
-
-    @abstractmethod
-    def filter(self, data: "object") -> bool:
-        """Return True if the data should be included, False otherwise."""
+from .jsonl_stream import JSONLStream
 
 
 class FileSortStrategyBase(ABC):
@@ -35,7 +26,7 @@ class FileSortStrategyBase(ABC):
 
 class ResourceParserStrategy(ABC):
     """Abstract base class for resource parser strategies.
-    
+
     Resource parsers convert raw resources (files) into JSONL format.
     """
 
@@ -44,21 +35,35 @@ class ResourceParserStrategy(ABC):
         self,
         resource_name: str,
         write_stream: IO[str],
-        parser_kv_args: dict[str, Any] | None = None,
     ) -> int:
         """Convert the input resource to JSONL and write to write_stream.
-        
+
         Args:
             resource_name: Identifier for the raw input (e.g., file path, object storage key).
             write_stream: A text stream to receive JSONL output. The parser writes one JSON object per line.
-            parser_kv_args: Optional key/value configuration to control parsing.
-            
+
         Returns:
             The number of JSON records written.
         """
 
+    @abstractmethod
+    async def parse_stream(
+        self,
+        async_input_stream: AsyncGenerator[str, None],
+        jsonl_stream: JSONLStream,
+    ) -> AsyncGenerator[int, None]:
+        """Stream parse from async input stream to jsonl_stream, yielding progress updates.
+
+        Args:
+            async_input_stream: Async generator yielding text lines.
+            jsonl_stream: JSONLStream helper for writing records.
+
+        Yields:
+            Number of records written so far (for progress tracking).
+        """
+
 
 # Strategy configuration types (for YAML config)
-FilterStrategyConfig = dict[str, Any]  # Configuration dict for filter strategies
-ResourceParserStrategyConfig = dict[str, Any]  # Configuration dict for resource parser strategies
-
+ResourceParserStrategyConfig = dict[
+    str, Any
+]  # Configuration dict for resource parser strategies

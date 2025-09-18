@@ -23,4 +23,3 @@ class DataRegistryParserConfig:
     concurrency: int = 10
     # Optional fields for backward compatibility with storage hooks
     config_id: str = ""
-

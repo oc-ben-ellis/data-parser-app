@@ -6,7 +6,7 @@ from data_parser_core.storage import Storage
 
 
 @dataclass
-class parserConfig:
+class ParserConfig:
     """parser configuration container."""
 
     credential_provider: CredentialProvider
